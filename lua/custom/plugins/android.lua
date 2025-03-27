@@ -1,5 +1,6 @@
 -- Android/Kotlin development configuration
 return {
+  'kotlin-language-server/kotlin-language-server',
   -- Configure LSP for Kotlin language server
   dependencies = {
     'neovim/nvim-lspconfig',
