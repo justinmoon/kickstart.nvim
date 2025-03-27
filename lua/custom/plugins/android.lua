@@ -2,24 +2,24 @@
 return {
   -- Configure LSP for Kotlin language server
   dependencies = {
-    "neovim/nvim-lspconfig",
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-    "nvim-treesitter/nvim-treesitter",
+    'neovim/nvim-lspconfig',
+    'williamboman/mason.nvim',
+    'williamboman/mason-lspconfig.nvim',
+    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    'nvim-treesitter/nvim-treesitter',
   },
-  
+
   config = function()
     -- Ensure kotlin-language-server is installed
-    require("mason-tool-installer").setup({
-      ensure_installed = { "kotlin-language-server" }
-    })
-    
+    require('mason-tool-installer').setup {
+      ensure_installed = { 'kotlin-language-server' },
+    }
+
     -- Ensure Kotlin parser is installed for treesitter
-    local ts_configs = require("nvim-treesitter.configs")
-    ts_configs.setup({
-      ensure_installed = { "kotlin" },
-    })
+    local ts_configs = require 'nvim-treesitter.configs'
+    ts_configs.setup {
+      ensure_installed = { 'kotlin' },
+    }
     -- Capture the Android SDK environment variables from your Nix shell
     vim.g.android_sdk_root = os.getenv 'ANDROID_SDK_ROOT'
     vim.g.android_home = os.getenv 'ANDROID_HOME'
@@ -51,21 +51,12 @@ return {
         if vim.lsp.buf.semantic_tokens_refresh then
           vim.lsp.buf.semantic_tokens_refresh()
         end
-        
-        -- Disable format on save for Kotlin files
-        local conform = require("conform")
-        conform.setup({
-          format_on_save = {
-            lsp_fallback = "never",
-            timeout_ms = 500,
-          },
-        })
       end,
     })
-    
+
     -- Configure Kotlin LSP
-    if require("lspconfig").kotlin_language_server then
-      require("lspconfig").kotlin_language_server.setup({
+    if require('lspconfig').kotlin_language_server then
+      require('lspconfig').kotlin_language_server.setup {
         cmd = { 'kotlin-language-server' },
         init_options = {
           storagePath = vim.fn.expand '~/.cache/kotlin-language-server',
@@ -104,7 +95,8 @@ return {
           ANDROID_NDK_ROOT = vim.g.android_ndk_root,
           JAVA_HOME = vim.g.java_home,
         },
-      })
+      }
     end
-  end
+  end,
 }
+
