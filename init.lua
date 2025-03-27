@@ -707,6 +707,8 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        -- commented out b/c mason currently fails to install on MacOS
+        -- 'nixfmt', -- Used to format Nix code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -761,6 +763,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        nix = { 'nixfmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
