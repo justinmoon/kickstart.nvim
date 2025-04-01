@@ -409,6 +409,28 @@ require('lazy').setup({
             require('telescope.themes').get_dropdown(),
           },
         },
+        defaults = {
+          -- live_grep will show hidden files, except .git
+          vimgrep_arguments = {
+            'rg',
+            '--color=never',
+            '--no-heading',
+            '--with-filename',
+            '--line-number',
+            '--column',
+            '--smart-case',
+            '--hidden',
+            '--iglob',
+            '!*.git/*',
+          },
+        },
+        -- find_files will show hidden files, except .git
+        pickers = {
+          find_files = {
+            hidden = true,
+            file_ignore_patterns = { '^%.git/' },
+          },
+        },
       }
 
       -- Enable Telescope extensions if they are installed
