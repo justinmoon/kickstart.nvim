@@ -686,17 +686,6 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        gopls = {
-          settings = {
-            gopls = {
-              analyses = {
-                unusedparams = true,
-              },
-              staticcheck = true,
-              gofumpt = true,
-            },
-          },
-        },
         -- pyright = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -720,7 +709,27 @@ require('lazy').setup({
             },
           },
         },
-        
+
+        gopls = {
+          mason = false, -- Disable Mason management
+          cmd = { 'gopls' }, -- Use system installed gopls
+          settings = {
+            gopls = {
+              analyses = {
+                unusedparams = true,
+              },
+              staticcheck = true,
+              gofumpt = true,
+            },
+          },
+        },
+
+        -- Zig Language Server
+        zls = {
+          mason = false, -- Disable Mason management
+          cmd = { 'zls' }, -- Use system installed zls from nix
+        },
+
         -- Rust analyzer configuration (using the one from Nix)
         rust_analyzer = {
           -- This ensures Mason doesn't try to install it
@@ -760,7 +769,7 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-      
+
       -- LSP setup is complete here, no need for additional configuration
       -- Formatting and linting are now configured in their respective plugin configurations
 
@@ -816,6 +825,8 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         rust = { 'rustfmt' },
+        go = { 'gofmt' },
+        zig = { 'zigfmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -824,20 +835,20 @@ require('lazy').setup({
       },
     },
   },
-  
+
   { -- Linter integration
     'mfussenegger/nvim-lint',
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
-      local lint = require('lint')
+      local lint = require 'lint'
       lint.linters_by_ft = {
         rust = { 'clippy' },
       }
-      
+
       -- Set up autocommand to trigger linting
-      vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost", "InsertLeave" }, {
+      vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufReadPost', 'InsertLeave' }, {
         callback = function()
-          require("lint").try_lint()
+          require('lint').try_lint()
         end,
       })
     end,
@@ -1015,7 +1026,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'rust' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'rust', 'go', 'zig' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
