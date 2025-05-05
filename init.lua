@@ -156,15 +156,21 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- stop Vim/Neovim from creating the temp files that confuse cargo-watch
+-- https://chatgpt.com/c/6816c4f1-b1fc-8005-9417-12c0bcd90677?model=o3
+vim.opt.backupcopy = 'yes' -- write the new file in-place (no 4913 rename dance)
+vim.opt.backup = false -- don’t leave a foo.rs~ backup beside the file
+vim.opt.writebackup = false -- (optional) skip the extra temporary write-backup
+
 -- Configure 4 spaces per tab for Go files
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "go",
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'go',
   callback = function()
     vim.opt_local.tabstop = 4
     vim.opt_local.softtabstop = 4
     vim.opt_local.shiftwidth = 4
     vim.opt_local.expandtab = true
-  end
+  end,
 })
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
@@ -761,6 +767,9 @@ require('lazy').setup({
               },
               cargo = {
                 allFeatures = true,
+                -- Give rust-analyzer it's own folder so it never conflicts with dev builds
+                targetDir = 'target/ra',
+                extraEnv = { MACOSX_DEPLOYMENT_TARGET = '15.3' }, -- <- NEW
               },
               procMacro = {
                 enable = true,
